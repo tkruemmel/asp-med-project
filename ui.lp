@@ -5,6 +5,7 @@ attr(w, title, "Propositional Formula Explorer").
 % Menu bar
 elem(menu_bar, menu_bar, w).
 attr(menu_bar, title, "Propositional Formula Explorer").
+attr(menu_bar, child_layout, flex).
 attr(menu_bar, icon, "fa-lightbulb").
 
     % Next solution button - Iterate over formulas
@@ -35,6 +36,37 @@ attr(menu_bar, icon, "fa-lightbulb").
     attr(toggle_optimal, class, "btn-primary") :- compute_optimal.
     when(toggle_optimal, click, call, add_atom(compute_optimal)) :- not compute_optimal.
     when(toggle_optimal, click, call, remove_atom(compute_optimal)) :- compute_optimal.
+
+    elem(maximum_error_count_display, button, menu_bar).
+    attr(maximum_error_count_display, label, "maximum error count undefined"):- not maximum_error_count.
+    attr(maximum_error_count_display, label, maximum_error_count):- maximum_error_count.
+    attr(maximum_error_count_display, class, ("disabled";"m-2";"btn-sm")).
+
+    elem(set_maximum_error_count, button, menu_bar).
+    attr(set_maximum_error_count, label, "Set Maximum Error Count").
+    attr(set_maximum_error_count, icon, "fa-user-plus").
+    attr(set_maximum_error_count, class, ("btn-info";"m-2")).
+    when(set_maximum_error_count, click, update, (add_error_modal, visibility, shown)).
+
+    elem(add_error_modal, modal, w).
+    attr(add_error_modal, title, "Set maximum error count").
+    elem(error_modal_content, container, add_error_modal).
+    attr(error_modal_content, class, ("d-flex";"flex-column")).
+
+    elem(maximum_error_count_tf, textfield, error_modal_content).
+    attr(maximum_error_count_tf, placeholder, "Error count").
+    attr(maximum_error_count_tf, order, 1).
+    attr(maximum_error_count_tf, width, 250).
+    when(maximum_error_count_tf, input, context, (maximum_error_count, _value)).
+
+    elem(btns_container, container, error_modal_content).
+    attr(btns_container, class, ("d-flex";"flex-row";"justify-content-end")).
+    attr(btns_container, order, 2).
+
+    elem(add_btn, button, btns_container).
+    attr(add_btn, label, "Set Value").
+    when(add_btn, click, call, add_atom((maximum_error_count, _value))).
+
 
 
 % Main layout with two columns
