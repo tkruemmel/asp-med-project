@@ -57,6 +57,8 @@ node(I) :- I = 1..size.
 formula_size(S) :- S = #count { I : for(I, _, _) }.
 error_count(Error) :- Error = #count { E : incorrect(1, E) }.
 
+:- maximum_error_count(X), error_count(Y), Y > X.
+
 % Calculate min/max size
 
 % Ensure formula iteration works
