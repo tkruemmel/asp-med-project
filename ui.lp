@@ -39,7 +39,7 @@ attr(menu_bar, icon, "fa-lightbulb").
 
     elem(maximum_error_count_display, button, menu_bar).
     attr(maximum_error_count_display, label, "maximum error count undefined"):- not maximum_error_count.
-    attr(maximum_error_count_display, label, maximum_error_count):- maximum_error_count.
+    attr(maximum_error_count_display, label, X):- maximum_error_count(X).
     attr(maximum_error_count_display, class, ("disabled";"m-2";"btn-sm")).
 
     elem(set_maximum_error_count, button, menu_bar).
@@ -57,7 +57,7 @@ attr(menu_bar, icon, "fa-lightbulb").
     attr(maximum_error_count_tf, placeholder, "Error count").
     attr(maximum_error_count_tf, order, 1).
     attr(maximum_error_count_tf, width, 250).
-    when(maximum_error_count_tf, input, context, (maximum_error_count, _value)).
+    when(maximum_error_count_tf, input, context, (max_error_count, _value)).
 
     elem(btns_container, container, error_modal_content).
     attr(btns_container, class, ("d-flex";"flex-row";"justify-content-end")).
@@ -65,7 +65,7 @@ attr(menu_bar, icon, "fa-lightbulb").
 
     elem(add_btn, button, btns_container).
     attr(add_btn, label, "Set Value").
-    when(add_btn, click, call, add_atom((maximum_error_count, _value))).
+    when(add_btn, click, call, add_atom(maximum_error_count(_context_value(max_error_count,int)))).
 
 
 
