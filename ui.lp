@@ -46,9 +46,8 @@ attr(menu_bar, icon, "fa-lightbulb").
     attr(set_maximum_error_count, label, "Set Maximum Error Count").
     attr(set_maximum_error_count, icon, "fa-user-plus").
     attr(set_maximum_error_count, class, ("btn-info";"m-2")).
-    when(set_maximum_error_count, click, call, remove_atom(maximum_error_count(X))) :- maximum_error_count(X).
     when(set_maximum_error_count, click, update, (add_error_modal, visibility, shown)).
-    
+
     elem(add_error_modal, modal, w).
     attr(add_error_modal, title, "Set maximum error count").
     elem(error_modal_content, container, add_error_modal).
@@ -66,6 +65,7 @@ attr(menu_bar, icon, "fa-lightbulb").
 
     elem(add_btn, button, btns_container).
     attr(add_btn, label, "Set Value").
+    when(add_btn, click, call, remove_atom(maximum_error_count(X))) :- maximum_error_count(X).
     when(add_btn, click, call, add_atom(maximum_error_count(_context_value(max_error_count,int)))).
 
 
