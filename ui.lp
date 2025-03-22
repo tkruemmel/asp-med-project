@@ -68,6 +68,37 @@ attr(menu_bar, icon, "fa-lightbulb").
     when(add_btn, click, call, remove_atom(maximum_error_count(X))) :- maximum_error_count(X).
     when(add_btn, click, call, add_atom(maximum_error_count(_context_value(max_error_count,int)))).
 
+    elem(minimum_error_count_display, button, menu_bar).
+    attr(minimum_error_count_display, label, "minimum error count undefined"):- not minimum_error_count.
+    attr(minimum_error_count_display, label, X):- minimum_error_count(X).
+    attr(minimum_error_count_display, class, ("disabled";"m-2";"btn-sm")).
+
+    elem(set_minimum_error_count, button, menu_bar).
+    attr(set_minimum_error_count, label, "Set Minimum Error Count").
+    attr(set_minimum_error_count, icon, "fa-user-plus").
+    attr(set_minimum_error_count, class, ("btn-info";"m-2")).
+    when(set_minimum_error_count, click, update, (add_minimum_error_modal, visibility, shown)).
+
+    elem(add_minimum_error_modal, modal, w).
+    attr(add_minimum_error_modal, title, "Set minimum error count").
+    elem(min_error_modal_content, container, add_minimum_error_modal).
+    attr(min_error_modal_content, class, ("d-flex";"flex-column")).
+
+    elem(minimum_error_count_tf, textfield, min_error_modal_content).
+    attr(minimum_error_count_tf, placeholder, "Error count").
+    attr(minimum_error_count_tf, order, 1).
+    attr(minimum_error_count_tf, width, 250).
+    when(minimum_error_count_tf, input, context, (min_error_count, _value)).
+
+    elem(min_btns_container, container, min_error_modal_content).
+    attr(min_btns_container, class, ("d-flex";"flex-row";"justify-content-end")).
+    attr(min_btns_container, order, 2).
+
+    elem(min_add_btn, button, min_btns_container).
+    attr(min_add_btn, label, "Set Value").
+    when(min_add_btn, click, call, remove_atom(minimum_error_count(X))) :- minimum_error_count(X).
+    when(min_add_btn, click, call, add_atom(minimum_error_count(_context_value(min_error_count,int)))).
+
 
 
 % Main layout with two columns
