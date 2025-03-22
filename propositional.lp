@@ -60,6 +60,8 @@ error_count(Error) :- Error = #count { E : incorrect(1, E) }.
 :- maximum_error_count(X), error_count(Y), Y > X.
 :- minimum_error_count(X), error_count(Y), Y < X.
 
+:- maximum_formula_size(X), formula_size(Y), Y > X.
+
 % Calculate min/max size
 
 % Ensure formula iteration works

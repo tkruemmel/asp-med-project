@@ -99,6 +99,37 @@ attr(menu_bar, icon, "fa-lightbulb").
     when(min_add_btn, click, call, remove_atom(minimum_error_count(X))) :- minimum_error_count(X).
     when(min_add_btn, click, call, add_atom(minimum_error_count(_context_value(min_error_count,int)))).
 
+    elem(max_formula_size_display, button, menu_bar).
+    attr(max_formula_size_display, label, "maximum formula size undefined"):- not maximum_formula_size.
+    attr(max_formula_size_display, label, X):- maximum_formula_size(X).
+    attr(max_formula_size_display, class, ("disabled";"m-2";"btn-sm")).
+
+    elem(set_max_formula_size, button, menu_bar).
+    attr(set_max_formula_size, label, "Set Maximum formula size").
+    attr(set_max_formula_size, icon, "fa-user-plus").
+    attr(set_max_formula_size, class, ("btn-info";"m-2")).
+    when(set_max_formula_size, click, update, (add_max_formula_size_modal, visibility, shown)).
+
+    elem(add_max_formula_size_modal, modal, w).
+    attr(add_max_formula_size_modal, title, "Set maximum formula size").
+    elem(max_formula_size_modal_content, container, add_max_formula_size_modal).
+    attr(max_formula_size_modal_content, class, ("d-flex";"flex-column")).
+
+    elem(max_formula_size_tf, textfield, max_formula_size_modal_content).
+    attr(max_formula_size_tf, placeholder, "Maximum formula size").
+    attr(max_formula_size_tf, order, 1).
+    attr(max_formula_size_tf, width, 250).
+    when(max_formula_size_tf, input, context, (max_formula_size, _value)).
+
+    elem(max_formula_size_btns_container, container, max_formula_size_modal_content).
+    attr(max_formula_size_btns_container, class, ("d-flex";"flex-row";"justify-content-end")).
+    attr(max_formula_size_btns_container, order, 2).
+
+    elem(max_formula_size_add_btn, button, max_formula_size_btns_container).
+    attr(max_formula_size_add_btn, label, "Set Value").
+    when(max_formula_size_add_btn, click, call, remove_atom(maximum_formula_size(X))) :- maximum_formula_size(X).
+    when(max_formula_size_add_btn, click, call, add_atom(maximum_formula_size(_context_value(max_formula_size  ,int)))).
+
 
 
 % Main layout with two columns
