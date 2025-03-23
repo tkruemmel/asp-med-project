@@ -82,6 +82,9 @@ minimize_error :- minimize(error_count).
 opt_weight(E,1) :- correct(1, E), compute_optimal.
 opt_weight(E,0) :- correct(1, E), not compute_optimal.
 
+:- not for(_, _, A), include_attr(A).
+:- for(_, _, A), exclude_attr(A).
+
 #maximize { W,E : opt_weight(E,W) }.
 
 % Add this default fact
