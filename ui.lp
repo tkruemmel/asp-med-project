@@ -5,6 +5,7 @@ attr(w, title, "Propositional Formula Explorer").
 % Menu bar
 elem(menu_bar, menu_bar, w).
 attr(menu_bar, title, "Propositional Formula Explorer").
+attr(menu_bar, child_layout, flex).
 attr(menu_bar, icon, "fa-lightbulb").
 
     % Next solution button - Iterate over formulas
@@ -35,6 +36,69 @@ attr(menu_bar, icon, "fa-lightbulb").
     attr(toggle_optimal, class, "btn-primary") :- compute_optimal.
     when(toggle_optimal, click, call, add_atom(compute_optimal)) :- not compute_optimal.
     when(toggle_optimal, click, call, remove_atom(compute_optimal)) :- compute_optimal.
+
+    elem(maximum_error_count_display, button, menu_bar).
+    attr(maximum_error_count_display, label, "maximum error count undefined"):- not maximum_error_count.
+    attr(maximum_error_count_display, label, X):- maximum_error_count(X).
+    attr(maximum_error_count_display, class, ("disabled";"m-2";"btn-sm")).
+
+    elem(set_maximum_error_count, button, menu_bar).
+    attr(set_maximum_error_count, label, "Set Maximum Error Count").
+    attr(set_maximum_error_count, icon, "fa-user-plus").
+    attr(set_maximum_error_count, class, ("btn-info";"m-2")).
+    when(set_maximum_error_count, click, update, (add_error_modal, visibility, shown)).
+
+    elem(add_error_modal, modal, w).
+    attr(add_error_modal, title, "Set maximum error count").
+    elem(error_modal_content, container, add_error_modal).
+    attr(error_modal_content, class, ("d-flex";"flex-column")).
+
+    elem(maximum_error_count_tf, textfield, error_modal_content).
+    attr(maximum_error_count_tf, placeholder, "Error count").
+    attr(maximum_error_count_tf, order, 1).
+    attr(maximum_error_count_tf, width, 250).
+    when(maximum_error_count_tf, input, context, (max_error_count, _value)).
+
+    elem(btns_container, container, error_modal_content).
+    attr(btns_container, class, ("d-flex";"flex-row";"justify-content-end")).
+    attr(btns_container, order, 2).
+
+    elem(add_btn, button, btns_container).
+    attr(add_btn, label, "Set Value").
+    when(add_btn, click, call, remove_atom(maximum_error_count(X))) :- maximum_error_count(X).
+    when(add_btn, click, call, add_atom(maximum_error_count(_context_value(max_error_count,int)))).
+
+    elem(minimum_error_count_display, button, menu_bar).
+    attr(minimum_error_count_display, label, "minimum error count undefined"):- not minimum_error_count.
+    attr(minimum_error_count_display, label, X):- minimum_error_count(X).
+    attr(minimum_error_count_display, class, ("disabled";"m-2";"btn-sm")).
+
+    elem(set_minimum_error_count, button, menu_bar).
+    attr(set_minimum_error_count, label, "Set Minimum Error Count").
+    attr(set_minimum_error_count, icon, "fa-user-plus").
+    attr(set_minimum_error_count, class, ("btn-info";"m-2")).
+    when(set_minimum_error_count, click, update, (add_minimum_error_modal, visibility, shown)).
+
+    elem(add_minimum_error_modal, modal, w).
+    attr(add_minimum_error_modal, title, "Set minimum error count").
+    elem(min_error_modal_content, container, add_minimum_error_modal).
+    attr(min_error_modal_content, class, ("d-flex";"flex-column")).
+
+    elem(minimum_error_count_tf, textfield, min_error_modal_content).
+    attr(minimum_error_count_tf, placeholder, "Error count").
+    attr(minimum_error_count_tf, order, 1).
+    attr(minimum_error_count_tf, width, 250).
+    when(minimum_error_count_tf, input, context, (min_error_count, _value)).
+
+    elem(min_btns_container, container, min_error_modal_content).
+    attr(min_btns_container, class, ("d-flex";"flex-row";"justify-content-end")).
+    attr(min_btns_container, order, 2).
+
+    elem(min_add_btn, button, min_btns_container).
+    attr(min_add_btn, label, "Set Value").
+    when(min_add_btn, click, call, remove_atom(minimum_error_count(X))) :- minimum_error_count(X).
+    when(min_add_btn, click, call, add_atom(minimum_error_count(_context_value(min_error_count,int)))).
+
 
 
 % Main layout with two columns
