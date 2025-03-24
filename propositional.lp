@@ -56,7 +56,12 @@ node(I) :- I = 1..size.
 % Calculate formula information
 formula_size(S) :- S = #count { I : for(I, _, _) }.
 error_count(Error) :- Error = #count { E : incorrect(1, E) }.
+% Calculate total number of examples
+example_count(C) :- C = #count { E : example(E,_)}.
 
+% Set up predicates for max/min error count
+%maximum_error_count(X) :- X = #maximize { E : error_count(E)}.
+%minimum_error_count(X) :- X = #minimize { E : error_count(E)}.
 :- maximum_error_count(X), error_count(Y), Y > X.
 :- minimum_error_count(X), error_count(Y), Y < X.
 
