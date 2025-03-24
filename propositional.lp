@@ -38,6 +38,7 @@ node(I) :- I = 1..size.
 :- for(I, (and;or), X), for(X, neg, _), for(Y, atom, _), I = 1..size, X = 1..size-1, Y = X+1.
 %% Prevents deeply nested and;or predicates that directly depend on atom;neg predicates.
 :- for(I, (and;or), X), for(X, (and;or), _), for(Y, (atom;neg), _), Y = X+1.
+:- for(_, neg, X), for(W, neg, _).
 
 %% F has the form (H AND I) and G (J OR K).
 :- for(I, (and;or), X), for(X, and, _), for(Y, or, _), I = 1..size, X = 1..size-1, Y = X+1.
@@ -56,12 +57,8 @@ node(I) :- I = 1..size.
 % Calculate formula information
 formula_size(S) :- S = #count { I : for(I, _, _) }.
 error_count(Error) :- Error = #count { E : incorrect(1, E) }.
-% Calculate total number of examples
-example_count(C) :- C = #count { E : example(E,_)}.
 
 % Set up predicates for max/min error count
-%maximum_error_count(X) :- X = #maximize { E : error_count(E)}.
-%minimum_error_count(X) :- X = #minimize { E : error_count(E)}.
 :- maximum_error_count(X), error_count(Y), Y > X.
 :- minimum_error_count(X), error_count(Y), Y < X.
 
