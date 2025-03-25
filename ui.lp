@@ -15,7 +15,7 @@ attr(menu_bar, icon, "fa-lightbulb").
     attr(next_solution_btn, class, ("btn-outline-primary";"border-0")).
     when(next_solution_btn, click, callback, next_solution).
 
-    % Next optimal solution button - Iterate over optimal formulas
+    % Next optimal solution button - Iterate over optimal formulas that minimize the error
     elem(next_optimal_btn, button, menu_bar).
     attr(next_optimal_btn, label, "Next Optimal").
     attr(next_optimal_btn, icon, "fa-award").
@@ -30,7 +30,7 @@ attr(menu_bar, icon, "fa-lightbulb").
     when(clear_btn, click, callback, clear_assumptions).
 
     elem(toggle_optimal, button, menu_bar).
-    attr(toggle_optimal, label, "Toggle Optimization").
+    attr(toggle_optimal, label, "Toggle Min Error Optimization").
     attr(toggle_optimal, icon, "fa-star").
     attr(toggle_optimal, class, ("btn-outline-primary";"border-0")).
     attr(toggle_optimal, class, "btn-primary") :- compute_optimal.
