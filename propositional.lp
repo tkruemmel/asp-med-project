@@ -15,11 +15,11 @@ positive(I, E) :- for(I, or, X), positive((X; Y), E), Y = X+1.
 positive(I, E) :- for(I, neg, X), not positive(X, E), example(E,_).
 
 %% A formula at position I is correct if classification matches with example's E ground truth.
-correct(I, E) :- positive(I, E), example(E, pos), I = 1..size.%, I = 1.
-correct(I, E) :- not positive(I, E), example(E, neg), I = 1..size.%, I = 1.
+correct(I, E) :- positive(I, E), example(E, pos), I = 1. %I = 1..size.%,
+correct(I, E) :- not positive(I, E), example(E, neg), I = 1. %I = 1..size.%, 
 
 %% Track incorrectly classified examples
-incorrect(I, E) :- example(E,_), not correct(I, E), I = 1..size.%, I = 1.
+incorrect(I, E) :- example(E,_), not correct(I, E), I = 1. %I = 1..size.%,
 
 %% referenced(X) captures the second element in a non-atomic for/3 predicate which refers to another formula
 referenced(X) :- for(_, (and;or), X).
@@ -78,11 +78,9 @@ cycle_formula(Opt) :- Opt = true, next_optimal_formula(ID).
 %%%%%%%%%% WIP
 
 % Optimization that is toggled with a Switch - Now min Error
-opt_weight(E,1) :- incorrect(1, E), compute_optimal.
+opt_weight(1,E) :- incorrect(1, E), compute_optimal.
 
-#minimize { W,E : opt_weight(E,W) }.
-
-%:- compute_optimal, error_count(E), min_error_count(MinErr), E > MinErr.
+#minimize { W,E : opt_weight(W,E) }.
 
 :- not for(_, _, A), include_attr(A).
 :- for(_, _, A), exclude_attr(A).
