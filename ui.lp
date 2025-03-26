@@ -260,11 +260,11 @@ attr(left_panel, overflow, "auto").
         
         elem(formula_size_info, typography, formula_info).
         attr(formula_size_info, variant, "body2").
-        attr(formula_size_info, text, "Size: ").
+        attr(formula_size_info, text, @concat("Size: ", S)) :- formula_size(S).
         
         elem(error_info, typography, formula_info).
         attr(error_info, variant, "body2").
-        attr(error_info, text, "Error: ").
+        attr(error_info, text, @concat("Error: ", E, "/", T)) :- error_count(E), example_count(T).
 
     % Incorrectly classified examples section
     elem(incorrect_examples, container, left_panel).
@@ -285,23 +285,23 @@ attr(left_panel, overflow, "auto").
         attr(incorrect_list, gap, "5px").
         
         % Create a button for each incorrect example
-        elem(incorrect_btn(E), button, incorrect_list) :- incorrect(E).
-        attr(incorrect_btn(E), label, E) :- incorrect(E).
-        attr(incorrect_btn(E), class, ("btn-sm";"btn-outline-danger")) :- incorrect(E), example(E, pos).
-        attr(incorrect_btn(E), class, ("btn-sm";"btn-outline-warning")) :- incorrect(E), example(E, neg).
-        when(incorrect_btn(E), click, call, add_atom(show_example_details(E))) :- incorrect(E).
+        elem(incorrect_btn(E), button, incorrect_list) :- incorrect(1, E).
+        attr(incorrect_btn(E), label, E) :- incorrect(1, E).
+        attr(incorrect_btn(E), class, ("btn-sm";"btn-outline-danger")) :- incorrect(1, E), example(E, pos).
+        attr(incorrect_btn(E), class, ("btn-sm";"btn-outline-warning")) :- incorrect(1, E), example(E, neg).
+        when(incorrect_btn(E), click, call, add_atom(show_example_details(E, A))) :- incorrect(1, E), has(E,A).
         
         % Example details section - shown when an example is clicked
-        elem(example_details, container, incorrect_examples) :- show_example_details(E).
-        attr(example_details, child_layout, flex) :- show_example_details(E).
-        attr(example_details, flex_direction, column) :- show_example_details(E).
-        attr(example_details, gap, "5px") :- show_example_details(E).
-        attr(example_details, class, ("border";"rounded";"p-2";"mt-2")) :- show_example_details(E).
+        elem(example_details, container, incorrect_examples) :- show_example_details(E, A).
+        attr(example_details, child_layout, flex) :- show_example_details(E, A).
+        attr(example_details, flex_direction, column) :- show_example_details(E, A).
+        attr(example_details, gap, "5px") :- show_example_details(E, A).
+        attr(example_details, class, ("border";"rounded";"p-2";"mt-2")) :- show_example_details(E, A).
         
             % Example header
-            elem(example_header(E), typography, example_details) :- show_example_details(E).
-            attr(example_header(E), variant, "body1") :- show_example_details(E).
-            attr(example_header(E), text, @concat("Example ", E, " (", C, ")")) :- show_example_details(E), example(E, C).
+            elem(example_header(E), typography, example_details) :- show_example_details(E, A).
+            attr(example_header(E), variant, "body1") :- show_example_details(E, A).
+            attr(example_header(E), text, @concat("Example ", E, " (", A, ")")) :- show_example_details(E, A), has(E, A).
             
             % Attribute list
             elem(example_attr_list, container, example_details) :- show_example_details(E).
@@ -319,7 +319,7 @@ attr(left_panel, overflow, "auto").
             elem(close_example_btn, button, example_details) :- show_example_details(E).
             attr(close_example_btn, label, "Close") :- show_example_details(E).
             attr(close_example_btn, class, "btn-outline-secondary") :- show_example_details(E).
-            when(close_example_btn, click, call, remove_atom(show_example_details(E))) :- show_example_details(E).
+            when(close_example_btn, click, call, remove_atom(show_example_details(E, A))) :- show_example_details(E, A).
 
 % Right panel - Graph visualization
 elem(right_panel, container, main_container).
