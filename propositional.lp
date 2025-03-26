@@ -78,11 +78,11 @@ cycle_formula(Opt) :- Opt = true, next_optimal_formula(ID).
 %%%%%%%%%% WIP
 
 % Optimization that is toggled with a Switch - Now min Error
-opt_weight(1,E) :- incorrect(1, E), compute_optimal.
+%opt_weight(1,E) :- incorrect(1, E), compute_optimal.
 
-opt_weight_count(Error) :- Error = #count { E : opt_weight(1, E) }.
+% opt_weight_count(Error) :- Error = #count { E : opt_weight(1, E) }.
 
-:- opt_weight_count(X), min_error_count(Y), X > Y.
+:- error_count(X), min_error_count(Y), X != Y, compute_optimal.
 
 % #minimize { W : opt_weight_count(W) }.
 
