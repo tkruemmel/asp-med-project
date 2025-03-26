@@ -38,6 +38,9 @@ node(I) :- I = 1..size.
 :- for(I, (and;or), X), for(X, neg, _), for(Y, atom, _), I = 1..size, X = 1..size-1, Y = X+1.
 %% Prevents deeply nested and;or predicates that directly depend on atom;neg predicates.
 :- for(I, (and;or), X), for(X, (and;or), _), for(Y, (atom;neg), _), Y = X+1.
+:- for(_, neg, X), for(X, neg, _).
+:- for(X, and, Y), for(X, and, Z), for(Y, atom, K), for(Z, atom, J), J=K. 
+:- for(X, or, Y), for(X, or, Z), for(Y, atom, K), for(Z, atom, J), J=K.
 
 %% F has the form (H AND I) and G (J OR K).
 :- for(I, (and;or), X), for(X, and, _), for(Y, or, _), I = 1..size, X = 1..size-1, Y = X+1.
@@ -61,6 +64,7 @@ error_count(Error) :- Error = #count { E : incorrect(1, E) }.
 :- minimum_error_count(X), error_count(Y), Y < X.
 
 :- maximum_formula_size(X), formula_size(Y), Y > X.
+:- minimum_formula_size(X), formula_size(Y), Y < X.
 
 % Calculate min/max size
 
@@ -84,7 +88,8 @@ minimize_error :- minimize(error_count).
 opt_weight(E,1) :- correct(1, E), compute_optimal.
 opt_weight(E,0) :- correct(1, E), not compute_optimal.
 
-#maximize { W,E : opt_weight(E,W) }.
+:- not for(_, _, A), include_attr(A).
+:- for(_, _, A), exclude_attr(A).
 
 % Add this default fact
 compute_optimal.
