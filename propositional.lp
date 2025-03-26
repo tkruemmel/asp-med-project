@@ -46,6 +46,8 @@ node(I) :- I = P..T, min_size(P), max_size(T).
 %% Prevents deeply nested and;or predicates that directly depend on atom;neg predicates.
 :- for(I, (and;or), X), for(X, (and;or), _), for(Y, (atom;neg), _), Y = X+1.
 :- for(_, neg, X), for(X, neg, _).
+:- for(X, and, Y), for(X, and, Z), for(Y, atom, K), for(Z, atom, J), J=K. 
+:- for(X, or, Y), for(X, or, Z), for(Y, atom, K), for(Z, atom, J), J=K.
 
 %% F has the form (H AND I) and G (J OR K).
 :- for(I, (and;or), X), for(X, and, _), for(Y, or, _), I = P..T, X = P..T-1, min_size(P), max_size(T), Y = X+1.
