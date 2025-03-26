@@ -1,12 +1,19 @@
+min_size(1) :- not minimum_formula_size.
+min_size(X) :- minimum_formula_size(X).
+
+max_size(X) :- X = size, not maximum_formula_size(_).
+max_size(X) :- maximum_formula_size(X).
+
+
 %% Generates all possible solution predicates.
-1 { for(I, T, X) : possible(I, T, X) } 1 :- I = 1..size.
+1 { for(I, T, X) : possible(I, T, X) } 1 :- I = MIN..MAX, min_size(MIN), max_size(MAX).
 
 %% Creates all possible predicates.
 %% Connect exclude_attr from UI to the program
-possible(I, atom, A) :- attribute(A), I = 1..size.
-possible(I, neg, J) :- I = 1..size-1, J = 1..size, J >= I + 1.
-possible(I, and, J) :- I = 1..size-2, J = 1..size-1, J >= I + 1.
-possible(I, or, J) :- I = 1..size-2, J = 1..size-1, J >= I + 1.
+possible(I, atom, A) :- attribute(A), I = P..T, min_size(P), max_size(T).
+possible(I, neg, J) :- I = P..T-1, J = P..T, min_size(P), max_size(T), J >= I + 1.
+possible(I, and, J) :- I = P..T-2, J = P..T-1, min_size(P), max_size(T), J >= I + 1.
+possible(I, or, J) :- I = P..T-2, J = P..T-1,min_size(P), max_size(T), J >= I + 1.
 
 %% positive(I, E) captures if a propositional formula at position I is positive for example E.
 positive(I, E) :- for(I, atom, F), has(E, F).
@@ -27,15 +34,15 @@ referenced(X) :- for(_, (and;or), Y), X = Y+1.
 referenced(X) :- for(_, neg, X).
 
 %% Every node must exist
-node(I) :- I = 1..size.
+node(I) :- I = P..T, min_size(P), max_size(T).
 :- node(I), not referenced(I), I > 1.
 
 %%%%% ==== Validity Constraints ====
 
 %% Ensure that attributes are stored in ascending order
-:- for(I, (and;or), X), for(X, atom, B), for(Y, atom, A), I = 1..size, X = 1..size-1, Y = X+1, A < B.
+:- for(I, (and;or), X), for(X, atom, B), for(Y, atom, A), I = P..T, X = P..T-1, min_size(P), max_size(T), Y = X+1, A < B.
 %% Prevents mixing negation with atom following an (and;or) structure
-:- for(I, (and;or), X), for(X, neg, _), for(Y, atom, _), I = 1..size, X = 1..size-1, Y = X+1.
+:- for(I, (and;or), X), for(X, neg, _), for(Y, atom, _), I = P..T, X = P..T-1, min_size(P), max_size(T), Y = X+1.
 %% Prevents deeply nested and;or predicates that directly depend on atom;neg predicates.
 :- for(I, (and;or), X), for(X, (and;or), _), for(Y, (atom;neg), _), Y = X+1.
 :- for(_, neg, X), for(X, neg, _).
@@ -43,7 +50,7 @@ node(I) :- I = 1..size.
 :- for(X, or, Y), for(X, or, Z), for(Y, atom, K), for(Z, atom, J), J=K.
 
 %% F has the form (H AND I) and G (J OR K).
-:- for(I, (and;or), X), for(X, and, _), for(Y, or, _), I = 1..size, X = 1..size-1, Y = X+1.
+:- for(I, (and;or), X), for(X, and, _), for(Y, or, _), I = P..T, X = P..T-1, min_size(P), max_size(T), Y = X+1.
 %% For any two non-atom nodes, ensure that the child index of the earlier one is lower.
 :- for(I, neg, I1), for(J, (neg; and; or), I2), I < J, I1 >= I2.
 %% Additional rule for (and; or): Ensure I1 + 1 < I2.
