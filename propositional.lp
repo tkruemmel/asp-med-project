@@ -15,11 +15,11 @@ positive(I, E) :- for(I, or, X), positive((X; Y), E), Y = X+1.
 positive(I, E) :- for(I, neg, X), not positive(X, E), example(E,_).
 
 %% A formula at position I is correct if classification matches with example's E ground truth.
-correct(I, E) :- positive(I, E), example(E, pos), I = 1.
-correct(I, E) :- not positive(I, E), example(E, neg), I = 1.
+correct(I, E) :- positive(I, E), example(E, pos), I = 1. %I = 1..size.%,
+correct(I, E) :- not positive(I, E), example(E, neg), I = 1. %I = 1..size.%, 
 
 %% Track incorrectly classified examples
-incorrect(I, E) :- example(E,_), not correct(I, E), I = 1.
+incorrect(I, E) :- example(E,_), not correct(I, E), I = 1. %I = 1..size.%,
 
 %% referenced(X) captures the second element in a non-atomic for/3 predicate which refers to another formula
 referenced(X) :- for(_, (and;or), X).
@@ -57,6 +57,7 @@ node(I) :- I = 1..size.
 % Calculate formula information
 formula_size(S) :- S = #count { I : for(I, _, _) }.
 error_count(Error) :- Error = #count { E : incorrect(1, E) }.
+min_error_count(MinErr) :- MinErr = #min { E : incorrect(1, E)}.
 
 % Set up predicates for max/min error count
 :- maximum_error_count(X), error_count(Y), Y > X.
@@ -70,9 +71,6 @@ error_count(Error) :- Error = #count { E : incorrect(1, E) }.
 cycle_formula(Opt) :- Opt = false, next_formula(ID).
 cycle_formula(Opt) :- Opt = true, next_optimal_formula(ID).
 
-% Track and minimize errors
-minimize_error :- minimize(error_count).
-
 % User constraints for formula size
 %:- formula_size(S), _clinguin_assume(min_size(Min), true), S < Min.
 %:- formula_size(S), _clinguin_assume(max_size(Max), true), S > Max.
@@ -82,17 +80,18 @@ minimize_error :- minimize(error_count).
 %:- error_count(E), _clinguin_assume(max_error(Max), true), E > Max.
 %%%%%%%%%% WIP
 
-% Regular optimization that works with a switch
-opt_weight(E,1) :- correct(1, E), compute_optimal.
-opt_weight(E,0) :- correct(1, E), not compute_optimal.
+% Optimization that is toggled with a Switch - Now min Error
+%opt_weight(1,E) :- incorrect(1, E), compute_optimal.
+
+% opt_weight_count(Error) :- Error = #count { E : opt_weight(1, E) }.
+
+:- error_count(X), min_error_count(Y), X != Y, compute_optimal.
+
+% #minimize { W : opt_weight_count(W) }.
 
 :- not for(_, _, A), include_attr(A).
 :- for(_, _, A), exclude_attr(A).
 
-#maximize { W,E : opt_weight(E,W) }.
-
-% Add this default fact
-compute_optimal.
 
 % Only optimize when requested (how to implement)
 % #maximize { 1, E : correct(1, E) }.
