@@ -58,6 +58,7 @@ node(I) :- I = 1..size.
 formula_size(S) :- S = #count { I : for(I, _, _) }.
 error_count(Error) :- Error = #count { E : incorrect(1, E) }.
 
+% Set up predicates for max/min error count
 :- maximum_error_count(X), error_count(Y), Y > X.
 :- minimum_error_count(X), error_count(Y), Y < X.
 
