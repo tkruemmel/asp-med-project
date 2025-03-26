@@ -130,6 +130,37 @@ attr(menu_bar, icon, "fa-lightbulb").
     when(max_formula_size_add_btn, click, call, remove_atom(maximum_formula_size(X))) :- maximum_formula_size(X).
     when(max_formula_size_add_btn, click, call, add_atom(maximum_formula_size(_context_value(max_formula_size  ,int)))).
 
+    elem(min_formula_size_display, button, menu_bar).
+    attr(min_formula_size_display, label, "minimum formula size undefined"):- not minimum_formula_size.
+    attr(min_formula_size_display, label, X):- minimum_formula_size(X).
+    attr(min_formula_size_display, class, ("disabled";"m-2";"btn-sm")).
+
+    elem(set_min_formula_size, button, menu_bar).
+    attr(set_min_formula_size, label, "Set minimum formula size").
+    attr(set_min_formula_size, icon, "fa-user-plus").
+    attr(set_min_formula_size, class, ("btn-info";"m-2")).
+    when(set_min_formula_size, click, update, (add_min_formula_size_modal, visibility, shown)).
+
+    elem(add_min_formula_size_modal, modal, w).
+    attr(add_min_formula_size_modal, title, "Set maximum formula size").
+    elem(min_formula_size_modal_content, container, add_min_formula_size_modal).
+    attr(min_formula_size_modal_content, class, ("d-flex";"flex-column")).
+
+    elem(min_formula_size_tf, textfield, min_formula_size_modal_content).
+    attr(min_formula_size_tf, placeholder, "Maximum formula size").
+    attr(min_formula_size_tf, order, 1).
+    attr(min_formula_size_tf, width, 250).
+    when(min_formula_size_tf, input, context, (min_formula_size, _value)).
+
+    elem(min_formula_size_btns_container, container, min_formula_size_modal_content).
+    attr(min_formula_size_btns_container, class, ("d-flex";"flex-row";"justify-content-end")).
+    attr(min_formula_size_btns_container, order, 2).
+
+    elem(min_formula_size_add_btn, button, min_formula_size_btns_container).
+    attr(min_formula_size_add_btn, label, "Set Value").
+    when(min_formula_size_add_btn, click, call, remove_atom(minimum_formula_size(X))) :- minimum_formula_size(X).
+    when(min_formula_size_add_btn, click, call, add_atom(minimum_formula_size(_context_value(min_formula_size  ,int)))).
+
 
 
 % Main layout with two columns
