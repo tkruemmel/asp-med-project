@@ -142,12 +142,12 @@ attr(menu_bar, icon, "fa-lightbulb").
     when(set_min_formula_size, click, update, (add_min_formula_size_modal, visibility, shown)).
 
     elem(add_min_formula_size_modal, modal, w).
-    attr(add_min_formula_size_modal, title, "Set maximum formula size").
+    attr(add_min_formula_size_modal, title, "Set minimum formula size").
     elem(min_formula_size_modal_content, container, add_min_formula_size_modal).
     attr(min_formula_size_modal_content, class, ("d-flex";"flex-column")).
 
     elem(min_formula_size_tf, textfield, min_formula_size_modal_content).
-    attr(min_formula_size_tf, placeholder, "Maximum formula size").
+    attr(min_formula_size_tf, placeholder, "Minimum formula size").
     attr(min_formula_size_tf, order, 1).
     attr(min_formula_size_tf, width, 250).
     when(min_formula_size_tf, input, context, (min_formula_size, _value)).
