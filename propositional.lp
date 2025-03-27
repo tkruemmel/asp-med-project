@@ -76,7 +76,7 @@ min_error_count(MinErr) :- MinErr = #min { E : incorrect(1, E)}.
 :- minimum_formula_size(X), formula_size(Y), Y < X.
 
 % Ensure formula iteration works
-cycle_formula(Opt) :- Opt = false, next_formula(ID).
+%cycle_formula(Opt) :- Opt = false, next_formula(ID).
 
 %% Optimization toggled with a switch to output minimal error solutions
 :- error_count(X), min_error_count(Y), X != Y, compute_optimal.
