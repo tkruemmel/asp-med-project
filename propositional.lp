@@ -1,9 +1,9 @@
+%% Predicates to enable min/max formula size given user input
 min_size(1) :- not minimum_formula_size.
 min_size(X) :- minimum_formula_size(X).
 
 max_size(X) :- X = size, not maximum_formula_size(_).
 max_size(X) :- maximum_formula_size(X).
-
 
 %% Generates all possible solution predicates.
 1 { for(I, T, X) : possible(I, T, X) } 1 :- I = MIN..MAX, min_size(MIN), max_size(MAX).
@@ -22,11 +22,11 @@ positive(I, E) :- for(I, or, X), positive((X; Y), E), Y = X+1.
 positive(I, E) :- for(I, neg, X), not positive(X, E), example(E,_).
 
 %% A formula at position I is correct if classification matches with example's E ground truth.
-correct(I, E) :- positive(I, E), example(E, pos), I = 1. %I = 1..size.%,
-correct(I, E) :- not positive(I, E), example(E, neg), I = 1. %I = 1..size.%, 
+correct(I, E) :- positive(I, E), example(E, pos), I = 1.
+correct(I, E) :- not positive(I, E), example(E, neg), I = 1. 
 
 %% Track incorrectly classified examples
-incorrect(I, E) :- example(E,_), not correct(I, E), I = 1. %I = 1..size.%,
+incorrect(I, E) :- example(E,_), not correct(I, E), I = 1.
 
 %% referenced(X) captures the second element in a non-atomic for/3 predicate which refers to another formula
 referenced(X) :- for(_, (and;or), X).
@@ -61,47 +61,28 @@ node(I) :- I = P..T, min_size(P), max_size(T).
 %% Checks that all predicates except the first one, are referenced.
 :- for(X, atom, B), not referenced(X), X > 1.
 
-%%%%%%% UI Constraints WIP
+%%%%%%% Further setting up of predicates for use cases
 
 % Calculate formula information
 formula_size(S) :- S = #count { I : for(I, _, _) }.
 error_count(Error) :- Error = #count { E : incorrect(1, E) }.
 min_error_count(MinErr) :- MinErr = #min { E : incorrect(1, E)}.
 
-% Set up predicates for max/min error count
+% Set up constraints for max/min error count
 :- maximum_error_count(X), error_count(Y), Y > X.
 :- minimum_error_count(X), error_count(Y), Y < X.
 
 :- maximum_formula_size(X), formula_size(Y), Y > X.
 :- minimum_formula_size(X), formula_size(Y), Y < X.
 
-% Calculate min/max size
-
 % Ensure formula iteration works
 cycle_formula(Opt) :- Opt = false, next_formula(ID).
-cycle_formula(Opt) :- Opt = true, next_optimal_formula(ID).
 
-% User constraints for formula size
-%:- formula_size(S), _clinguin_assume(min_size(Min), true), S < Min.
-%:- formula_size(S), _clinguin_assume(max_size(Max), true), S > Max.
-
-% User constraints for error bounds
-%:- error_count(E), _clinguin_assume(min_error(Min), true), E < Min.
-%:- error_count(E), _clinguin_assume(max_error(Max), true), E > Max.
-%%%%%%%%%% WIP
-
-% Optimization that is toggled with a Switch - Now min Error
-%opt_weight(1,E) :- incorrect(1, E), compute_optimal.
-
-% opt_weight_count(Error) :- Error = #count { E : opt_weight(1, E) }.
-
+%% Optimization toggled with a switch to output minimal error solutions
 :- error_count(X), min_error_count(Y), X != Y, compute_optimal.
 
-% #minimize { W : opt_weight_count(W) }.
-
+%% Include / Exclude attributes when clicked
 :- not for(_, _, A), include_attr(A).
 :- for(_, _, A), exclude_attr(A).
 
-% Only optimize when requested (how to implement)
-% #maximize { 1, E : correct(1, E) }.
 #show for/3.
